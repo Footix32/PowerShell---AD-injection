@@ -14,6 +14,16 @@ function Compare-ADUserGroups {
     # Get second user groups
     $user2Groups = Get-ADUser -Identity $User2 -Properties MemberOf | Select-Object -ExpandProperty MemberOf
 
+# Check if the user has any groups
+if (-not $user1Groups) {
+    Write-Host "User $User1 does not exist or has no groups."
+    return
+}
+if (-not $user2Groups) {
+    Write-Host "User $User2 does not exist or has no groups."
+    return
+}
+
     # Find groups in common
     $commonGroups = $user1Groups | Where-Object { $user2Groups -contains $_ }
 
