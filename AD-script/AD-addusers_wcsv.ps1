@@ -12,7 +12,7 @@ $CoreOUName = "CORE"
 $CoreOUPath = "OU=$CoreOUName,$BaseOUPath"
 
 try {
-    if (-not (Get-ADOrganizationalUnit -Filter {Name -eq $CoreOUName} -SearchBase $BaseOUPath)) {
+    if (-not (Get-ADOrganizationalUnit -Filter "Name -eq '$CoreOUName'" -SearchBase $BaseOUPath)) {
         New-ADOrganizationalUnit -Name $CoreOUName -Path $BaseOUPath
         Write-Output "The OU '$CoreOUName' has been created in '$BaseOUPath'."
     } else {
@@ -72,7 +72,13 @@ for ($i = 0; $i -lt $UserCount; $i++) {
         continue
     }
 
+    if ($UserFirstName.Length -gt 0) {
     $UserLogin = ($UserFirstName).Substring(0, 1) + "." + $UserLastName
+} else {
+    Write-Warning "First name missing for user at index $i"
+    continue
+}
+
     $UserEmail = "$UserLogin@footix.lan"
     $UserPassword = $User.password
 
