@@ -5,7 +5,7 @@ $CSVData = Import-Csv -Path $CSVFile -Delimiter "," -Encoding UTF8
 Import-Module ActiveDirectory
 
 # Define the base path for the OUs
-$BaseOUPath = "DC=dinoland,DC=lan"
+$BaseOUPath = "DC=footix,DC=lan"
 
 # Create the main OU "CORE"
 $CoreOUName = "CORE"
@@ -73,7 +73,7 @@ for ($i = 0; $i -lt $UserCount; $i++) {
     }
 
     $UserLogin = ($UserFirstName).Substring(0, 1) + "." + $UserLastName
-    $UserEmail = "$UserLogin@dinoland.lan"
+    $UserEmail = "$UserLogin@footix.lan"
     $UserPassword = $User.password
 
     # Determine the OU path based on user index
@@ -91,7 +91,7 @@ for ($i = 0; $i -lt $UserCount; $i++) {
                        -GivenName $UserFirstName `
                        -Surname $UserLastName `
                        -SamAccountName $UserLogin `
-                       -UserPrincipalName "$UserLogin@dinoland.lan" `
+                       -UserPrincipalName "$UserLogin@footix.lan" `
                        -EmailAddress $UserEmail `
                        -Path $TargetOU `
                        -AccountPassword (ConvertTo-SecureString $UserPassword -AsPlainText -Force) `
