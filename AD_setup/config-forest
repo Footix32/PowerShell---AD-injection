@@ -1,20 +1,38 @@
-#User's input for domain name
-$DomainNameDNS = Read-Host "Enter domain.com "
+# User's input for domain name
+while ($true) {
+    $DomainNameDNS = Read-Host "Enter domain.com "
+    if ($DomainNameDNS -match "^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$") {
+        break
+    } else {
+        Write-Host "Invalid domain name format. Please try again." -ForegroundColor Red
+    }
+}
+
 $DomainNameNetbios = Read-Host "Enter domain NetBios name"
 
-#Forest Configuration
+# Forest Configuration
 $ForestConfiguration = @{
-'-DatabasePath'= 'C:\Windows\NTDS';
-'-DomainMode' = 'Default';
-'-DomainName' = $DomainNameDNS;
-'-DomainNetbiosName' = $DomainNameNetbios;
-'-ForestMode' = 'Default';
-'-InstallDns' = $true;
-'-LogPath' = 'C:\Windows\NTDS';
-'-NoRebootOnCompletion' = $true;
-'-SysvolPath' = 'C:\Windows\SYSVOL';
-'-Force' = $true;
-'-CreateDnsDelegation' = $false }
+    '-DatabasePath'         = 'C:\Windows\NTDS'
+    '-DomainMode'           = 'Default'
+    '-DomainName'           = $DomainNameDNS
+    '-DomainNetbiosName'    = $DomainNameNetbios
+    '-ForestMode'           = 'Default'
+    '-InstallDns'           = $true
+    '-LogPath'              = 'C:\Windows\NTDS'
+    '-NoRebootOnCompletion' = $true
+    '-SysvolPath'           = 'C:\Windows\SYSVOL'
+    '-Force'                = $true
+    '-CreateDnsDelegation'  = $false
+}
 
+# Import the ADDSDeployment module
 Import-Module ADDSDeployment
-Install-ADDSForest @ForestConfiguration
+
+# Try to install the ADDS forest
+try {
+    Install-ADDSForest @ForestConfiguration
+    Write-Host "Forest installation completed successfully."
+} catch {
+    Write-Host "An error occurred during the forest installation: $_" -ForegroundColor Red
+    exit
+}
