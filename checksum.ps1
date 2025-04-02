@@ -11,6 +11,15 @@ while ($true) {
     # Ask for the hashing algorithm
     $Algo = Read-Host -Prompt "Enter the algorithm you want to use (e.g., SHA256, SHA512)"
 
+    # List of valid algorithms
+    $ValidAlgorithms = @("SHA1", "SHA256", "SHA384", "SHA512", "MD5")
+
+    # Check if the chosen algorithm is valid
+    if ($Algo -notin $ValidAlgorithms) {
+        Write-Output "Invalid hashing algorithm. Choose from: $($ValidAlgorithms -join ', ')"
+        continue
+    }
+
     # Check if the file exists
     if (Test-Path -Path $filePath) {
         # Calculate the checksum using the specified algorithm
